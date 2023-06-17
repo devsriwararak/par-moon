@@ -157,7 +157,7 @@ function Menu1() {
   };
 
   return (
-    <div className=" flex flex-col  bg-gray-200 h-screen ms-2 ">
+    <div className=" flex flex-col  bg-gray-200 h-screen ms-0 ">
       <div className="flex  items-center justify-between item-center text-white bg-red-400 px-5 py-[23px] sm:py-[23px] md:py-[30px] lg:py-[22px] xl:py-[23px] ">
         <div className="flex w-[15%]">
           <h1 className=" text-center lg:text-lg">สร้างหัวข้อการประมูล</h1>

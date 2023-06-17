@@ -9,8 +9,7 @@ import "../App.css";
 // naii
 import io from "socket.io-client";
 let socket = io.connect("https://socket-api-1-752301fd194d.herokuapp.com/");
-
-
+import { api } from "../api/api";
 
 function Board() {
   const [data, setData] = useState("");
@@ -23,14 +22,18 @@ function Board() {
 
   const [Title, setTitle] = useState("");
   const [gift, setGift] = useState("");
-  const [customer, setCustomer] = useState([])
+  const [customer, setCustomer] = useState([]);
+  const [number, setNumber] = useState("");
+  const [id , setId]=useState("")
+
+  
 
   // naii
   useEffect(() => {
     // socket_1
     socket.on("show_display_1", (newData) => {
-      newData.map((data) => {
-        return setTitle(data.auctionstarted_auction_topic);
+       newData.map((data) => {
+        return (setTitle(data.auctionstarted_auction_topic), setId(data.id_auctionstarted));
       });
     });
 
@@ -43,21 +46,37 @@ function Board() {
 
     // socket_3
     socket.on("show_display_3", (newData) => {
-      setCustomer(newData)
+      setCustomer(newData);
     });
 
-     // socket_4 
-     socket.on("show_display_4", (newData) => {
-      if(newData === "ลบแล้ว"){
-        setTitle("")
-        setGift("")
-        setCustomer([])
+    // socket_4
+    socket.on("show_display_4", (newData) => {
+      if (newData === "ลบแล้ว") {
+        setTitle("");
+        setGift("");
+        setCustomer([]);
+        setNumber("")
+        setId("")
       }
-
-     
     });
-  }, []);
 
+    // number_0
+    socket.on("show_number_0", (newData) => {
+      setNumber(newData);
+    });
+      // number_1
+      socket.on("show_number_1", (newData) => {
+        setNumber(newData);
+      });
+        // number_2
+    socket.on("show_number_2", (newData) => {
+      setNumber(newData);
+    });
+      // number_3
+      socket.on("show_number_3", (newData) => {
+        setNumber(newData);
+      });
+  }, []);
 
   // #################################################################
 
@@ -84,7 +103,8 @@ function Board() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://bankcash1.herokuapp.com/Show/List/Top"
+          `${api}/Show/List/Top`
+          // "https://bankcash1.herokuapp.com/Show/List/Top"
         );
         setShowTop(response.data);
         // console.log(response.data);
@@ -106,18 +126,21 @@ function Board() {
     }
   }, [loadStatus]);
 
+  
   useEffect(() => {
-    if (data.status_123 == 3) {
+    if (number == 3) {
       setTimeout(async () => {
         try {
           const response1 = await axios.get(
-            "https://bankcash1.herokuapp.com/Show/List/TopTire"
+            `${api}/Show/List/TopTire`
+            // "https://bankcash1.herokuapp.com/Show/List/TopTire"
           );
           console.log(response1.data);
         } catch (error) {
           console.error("ไม่สามารถเรียกดูข้อมูล TopTire ได้", error);
           const response2 = await axios.get(
-            `https://bankcash1.herokuapp.com/Show/Report/${data.id_auctionstarted}/Detail`
+            `${api}/Show/Report/${id}/Detail`
+            // `https://bankcash1.herokuapp.com/Show/Report/${data.id_auctionstarted}/Detail`
           );
           setShowTopTier(response2.data);
         }
@@ -126,7 +149,31 @@ function Board() {
     } else {
       setDelayRender(false);
     }
-  }, [data.status_123, data.id_auctionstarted]);
+  }, [number, id]);
+
+  // useEffect(() => {
+  //   if (data.status_123 == 3) {
+  //     setTimeout(async () => {
+  //       try {
+  //         const response1 = await axios.get(
+  //           `${api}/Show/List/TopTire`
+  //           // "https://bankcash1.herokuapp.com/Show/List/TopTire"
+  //         );
+  //         console.log(response1.data);
+  //       } catch (error) {
+  //         console.error("ไม่สามารถเรียกดูข้อมูล TopTire ได้", error);
+  //         const response2 = await axios.get(
+  //           `${api}/Show/Report/${data.id_auctionstarted}/Detail`
+  //           // `https://bankcash1.herokuapp.com/Show/Report/${data.id_auctionstarted}/Detail`
+  //         );
+  //         setShowTopTier(response2.data);
+  //       }
+  //       setDelayRender(true);
+  //     }, 3000);
+  //   } else {
+  //     setDelayRender(false);
+  //   }
+  // }, [data.status_123, data.id_auctionstarted]);
 
   return (
     <div
@@ -138,34 +185,37 @@ function Board() {
         backgroundPosition: "center",
       }}
     >
-
       {/* naii ###################################################### */}
+
+      <h1>ID : {id}</h1>
+
+      <br /> -----------------------------
 
       <h1>หัวข้อประมูล : {Title}</h1>
       <h2>ของแถม : {gift}</h2>
+      <br />
 
-      {
-        customer.map((data, index)=>{
-          let count_num = "";
-          if(index == 0){
-            count_num = 1
-          } else if (index == 1){
-            count_num = 2
-          }
-          else if (index == 2){
-            count_num = 3
-          }
-          
-          return(
-            
-          
-            <h1>{` ลำดับที่ ${count_num} ${data.user_auction} / ราคา : ${data.auction_result_price}`}</h1>
-          )
-        })
-      }
+      {customer.map((data, index) => {
+        let count_num = "";
+        if (index == 0) {
+          count_num = 1;
+        } else if (index == 1) {
+          count_num = 2;
+        } else if (index == 2) {
+          count_num = 3;
+        }
+
+        return (
+          <h1
+            key={index}
+          >{` ลำดับที่ ${count_num} ${data.user_auction} / ราคา : ${data.auction_result_price}`}</h1>
+        );
+      })}
+
+      <br />
+      นับถอยหลัง : {number}
 
       {/* naii ###################################################### */}
-
 
       <div className="w-full flex justify-between z-10 ">
         <div className=" flex w-[15%] sm:w-[17%] md:w-[13%] lg:w-[10%] xl:w-[10%]  absolute top-0 left-0 z-10  ">

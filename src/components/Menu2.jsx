@@ -126,7 +126,7 @@ const closeModal = () => {
 
 
   return (
-    <div className="w-full flex flex-col  bg-gray-200 h-screen  ms-2  ">
+    <div className="w-full flex flex-col  bg-gray-200 h-screen  ms-0  ">
      <div className="flex justify-between item-center text-white bg-red-400 px-5 py-3 ">
         <h1 className=" text-center">ของแถม</h1>
         <div className="flex items-center justify-center text-center">

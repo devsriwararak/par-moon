@@ -16,12 +16,15 @@ import "../App.css";
 // naii
 import io from 'socket.io-client'
 let socket = io.connect("https://socket-api-1-752301fd194d.herokuapp.com/");
+  // API
+  import { api } from "../api/api";
 
 
 
 Modal.setAppElement("#root");
 
 function Menu3() {
+
   const navigate = useNavigate();
   const [listDataTitle, setListDataTitle] = useState([]);
   const { setDisableButtons } = useContext(DisableButtonsContext);
@@ -63,11 +66,12 @@ function Menu3() {
   const [editIndex, setEditIndex] = useState(null);
   const [reportData, setReportData] = useState({});
 
+
   const fetchDataTitleChoose = async () => {
     try {
       const responseTitle = await axios.get(
-        // "https://bankcash1.herokuapp.com/Title",
-        "https://bankcash1.herokuapp.com/Title/Choose",
+        `${api}/Title/Choose`,
+        // "https://bankcash1.herokuapp.com/Title/Choose",
         {
           headers: {
             "Content-Type": "application/json",
@@ -75,8 +79,9 @@ function Menu3() {
           },
         }
       );
-      // console.log(responseTitle.data);
+      console.log(responseTitle.data);
       setListDataTitle(responseTitle.data);
+      
     } catch (error) {
       console.error(error);
     }
@@ -101,7 +106,8 @@ function Menu3() {
     const fetchCustomerList = async () => {
       try {
         const response = await axios.get(
-          "https://bankcash1.herokuapp.com/Customer",
+          `${api}/Customer`,
+          // "https://bankcash1.herokuapp.com/Customer",
           {
             headers: {
               "Content-Type": "application/json",
@@ -224,7 +230,8 @@ function Menu3() {
       try {
         // console.log(newCustomer);
         const response = await axios.post(
-          "https://bankcash1.herokuapp.com/Customer",
+          `${api}/Customer`,
+          // "https://bankcash1.herokuapp.com/Customer",
           newCustomer,
           {
             headers: {
@@ -260,7 +267,8 @@ function Menu3() {
     };
     try {
       const response = await axios.post(
-        "https://bankcash1.herokuapp.com/Show",
+        `${api}/Show`,
+        // "https://bankcash1.herokuapp.com/Show",
         dataToSend,
 
         {
@@ -295,7 +303,8 @@ function Menu3() {
 
     try {
       const response = await axios.post(
-        "https://bankcash1.herokuapp.com/Show/List",
+        `${api}/Show/List`,
+        // "https://bankcash1.herokuapp.com/Show/List",
         dataToSend,
         {
           headers: {
@@ -312,7 +321,8 @@ function Menu3() {
       };
       try {
         const response = await axios.put(
-          "https://bankcash1.herokuapp.com/Show",
+          `${api}/Show`,
+          // "https://bankcash1.herokuapp.com/Show",
           dataToSendUpdateB,
           {
             headers: {
@@ -384,7 +394,8 @@ function Menu3() {
     // console.log(sendData);
     try {
       const response = await axios.post(
-        "https://bankcash1.herokuapp.com/AddGift",
+        `${api}/AddGift`,
+        // "https://bankcash1.herokuapp.com/AddGift",
         {
           show_Id: id_auctionstarted,
           gift_Name: sendData,
@@ -411,7 +422,8 @@ function Menu3() {
     // console.log(id_auctionstarted);
     try {
       const response = await axios.delete(
-        "https://bankcash1.herokuapp.com/End",
+        `${api}/End`,
+        // "https://bankcash1.herokuapp.com/End",
         {
           headers: {
             "Content-Type": "application/json",
@@ -484,7 +496,8 @@ function Menu3() {
     const sendButtonValue = async () => {
       try {
         const response = await axios.post(
-          "https://bankcash1.herokuapp.com/AddCount",
+          `${api}/AddCount`,
+          // "https://bankcash1.herokuapp.com/AddCount",
           {
             show_Id: id_auctionstarted,
             status_123: Number(e),
@@ -496,6 +509,7 @@ function Menu3() {
             },
           }
         );
+        await socket.emit(`number_${e}`)
 
         // console.log(response.data);
       } catch (error) {
@@ -511,8 +525,8 @@ function Menu3() {
   const handleGenerateCertificate = async () => {
     try {
       const response = await axios.get(
-        `https://bankcash1.herokuapp.com/Show/Report/${id_auctionstarted}/Detail`,
-        // `https://bankcash1.herokuapp.com/Show/Report/348/Detail`,
+        `${api}/Show/Report/${id_auctionstarted}/Detail`,
+        // `https://bankcash1.herokuapp.com/Show/Report/${id_auctionstarted}/Detail`,
         {
           headers: {
             Authorization: `Token ${Token}`,
@@ -530,7 +544,7 @@ function Menu3() {
   // console.log(reportData);
 
   return (
-    <div className=" flex flex-col  bg-gray-200 h-screen  ms-2 ">
+    <div className=" flex flex-col  bg-gray-200 h-screen m-0  ">
       {/* Header bar */}
       <div className="flex  items-center justify-between item-center text-white bg-red-400 px-5 py-[23px] sm:py-[23px] md:py-[30px] lg:py-[22px] xl:py-[23px] ">
         <div className="flex w-[15%]">
@@ -558,7 +572,7 @@ function Menu3() {
             onClick={handleLogout}
             className="flex justify-center  text-center align-middle rounded-lg  font-bold hover:text-black"
           >
-            <img src={logout} className=" text-center justify-center" />
+            <img src={logout} className="  text-center  justify-center" />
           </button>
         </div>
       </div>
